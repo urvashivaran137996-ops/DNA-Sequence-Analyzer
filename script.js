@@ -1,60 +1,109 @@
 function analyzeDNA() {
 
-    let sequence = document.getElementById("dnaInput").value;
+    const input = document.getElementById("dnaInput");
+    const result = document.getElementById("result");
+    const error = document.getElementById("error");
 
-    sequence = sequence.toUpperCase().replace(/\s/g, "");
+    let sequence = input.value.toUpperCase().replace(/\s/g, "");
 
-    let result = document.getElementById("result");
+    error.style.display = "none";
 
     if (sequence.length === 0) {
-        result.innerHTML = "<p>Please enter a DNA sequence.</p>";
+        error.textContent = "Please enter a DNA sequence.";
+        error.style.display = "block";
         return;
     }
 
     if (!/^[ATGC]+$/.test(sequence)) {
-        result.innerHTML =
-            "<p>❌ Invalid sequence! Please use only A, T, G and C.</p>";
+        error.textContent =
+            "Invalid DNA sequence. Use only A, T, G and C.";
+        error.style.display = "block";
         return;
     }
 
-    let total = sequence.length;
+    const total = sequence.length;
 
-    let A = (sequence.match(/A/g) || []).length;
-    let T = (sequence.match(/T/g) || []).length;
-    let G = (sequence.match(/G/g) || []).length;
-    let C = (sequence.match(/C/g) || []).length;
+    let A = 0;
+    let T = 0;
+    let G = 0;
+    let C = 0;
 
-    let AT = ((A + T) / total) * 100;
-    let GC = ((G + C) / total) * 100;
+    for (let base of sequence) {
+
+        if (base === "A") {
+            A++;
+        } else if (base === "T") {
+            T++;
+        } else if (base === "G") {
+            G++;
+        } else if (base === "C") {
+            C++;
+        }
+    }
+
+    const APercent = ((A / total) * 100).toFixed(2);
+    const TPercent = ((T / total) * 100).toFixed(2);
+    const GPercent = ((G / total) * 100).toFixed(2);
+    const CPercent = ((C / total) * 100).toFixed(2);
+
+    const GC = (((G + C) / total) * 100).toFixed(2);
+    const AT = (((A + T) / total) * 100).toFixed(2);
 
     result.innerHTML = `
-        <h2>Analysis Result</h2>
+        <h3>Analysis Result</h3>
+
+        <p><strong>DNA Sequence:</strong> ${sequence}</p>
 
         <p><strong>Total Length:</strong> ${total}</p>
 
-        <p>🟢 <strong>Adenine (A):</strong>
-        ${A} (${((A / total) * 100).toFixed(2)}%)</p>
+        <p><strong>Adenine (A):</strong>
+        ${A} (${APercent}%)</p>
 
-        <p>🔵 <strong>Thymine (T):</strong>
-        ${T} (${((T / total) * 100).toFixed(2)}%)</p>
+        <p><strong>Thymine (T):</strong>
+        ${T} (${TPercent}%)</p>
 
-        <p>🟡 <strong>Guanine (G):</strong>
-        ${G} (${((G / total) * 100).toFixed(2)}%)</p>
+        <p><strong>Guanine (G):</strong>
+        ${G} (${GPercent}%)</p>
 
-        <p>🔴 <strong>Cytosine (C):</strong>
-        ${C} (${((C / total) * 100).toFixed(2)}%)</p>
+        <p><strong>Cytosine (C):</strong>
+        ${C} (${CPercent}%)</p>
 
         <hr>
 
-        <p><strong>GC Content:</strong> ${GC.toFixed(2)}%</p>
+        <p><strong>GC Content:</strong> ${GC}%</p>
 
-        <p><strong>AT Content:</strong> ${AT.toFixed(2)}%</p>
+        <p><strong>AT Content:</strong> ${AT}%</p>
     `;
 }
+
 
 function clearDNA() {
 
     document.getElementById("dnaInput").value = "";
 
-    document.getElementById("result").innerHTML = "";
+    document.getElementById("error").style.display = "none";
+
+    document.getElementById("result").innerHTML =
+        "<p>Enter a DNA sequence and click Analyze.</p>";
+}
+
+
+function copyResult() {
+
+    const result = document.getElementById("result");
+
+    const text = result.innerText;
+
+    if (!text || text.includes("Enter a DNA sequence")) {
+        alert("Please analyze a DNA sequence first.");
+        return;
+    }
+
+    navigator.clipboard.writeText(text)
+        .then(function() {
+            alert("Result copied successfully!");
+        })
+        .catch(function() {
+            alert("Copy failed. Please copy the result manually.");
+        });
 }
