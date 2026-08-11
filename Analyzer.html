@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Analyze DNA sequences and calculate nucleotide statistics.">
+  <title>Analyzer | DNA Sequence Analyzer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">DNA</span>
+        <span>Sequence Analyzer</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="analyzer.html" class="active">Analyzer</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-banner">
+      <div class="container">
+        <p class="eyebrow">DNA ANALYSIS WORKSPACE</p>
+        <h1>Analyze your sequence</h1>
+        <p>
+          Enter a DNA sequence below to calculate its composition and discover
+          useful sequence information.
+        </p>
+      </div>
+    </section>
+
+    <section class="analyzer-section">
+      <div class="container">
+        <div class="analyzer-layout">
+          <div class="input-panel panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">STEP 01</p>
+                <h2>Enter DNA sequence</h2>
+              </div>
+              <span class="status-dot"></span>
+            </div>
+
+            <label for="dnaSequence">DNA sequence</label>
+            <textarea
+              id="dnaSequence"
+              rows="9"
+              placeholder="Example: ATGCGTACCGTAGCTAGCTA"
+              spellcheck="false"
+              aria-describedby="sequenceHelp"
+            ></textarea>
+
+            <p id="sequenceHelp" class="input-help">
+              Use only the nucleotide letters A, T, G, and C. Spaces and line
+              breaks will be removed automatically.
+            </p>
+
+            <div id="sequenceError" class="message message-error" role="alert" hidden></div>
+
+            <div class="sample-row">
+              <button type="button" id="sampleButton" class="text-button">
+                Load sample sequence
+              </button>
+              <button type="button" id="clearButton" class="text-button">
+                Clear
+              </button>
+            </div>
+
+            <button type="button" id="analyzeButton" class="button button-primary full-width">
+              Analyze Sequence
+            </button>
+          </div>
+
+          <div class="results-panel panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">STEP 02</p>
+                <h2>Analysis results</h2>
+              </div>
+              <span id="resultStatus" class="result-status">Waiting for sequence</span>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <span class="stat-label">Sequence Length</span>
+                <strong id="sequenceLength">—</strong>
+                <small>base pairs</small>
+              </div>
+
+              <div class="stat-card">
+                <span class="stat-label">GC Content</span>
+                <strong id="gcContent">—</strong>
+                <small>percentage</small>
+              </div>
+
+              <div class="stat-card">
+                <span class="stat-label">AT Content</span>
+                <strong id="atContent">—</strong>
+                <small>percentage</small>
+              </div>
+
+              <div class="stat-card">
+                <span class="stat-label">Estimated GC Stability</span>
+                <strong id="gcCategory">—</strong>
+                <small>based on GC percentage</small>
+              </div>
+            </div>
+
+            <div class="composition-section">
+              <h3>Nucleotide composition</h3>
+
+              <div class="base-row">
+                <div class="base-info">
+                  <span class="base-letter base-a">A</span>
+                  <span>Adenine</span>
+                </div>
+                <div class="progress-track">
+                  <div id="aBar" class="progress-fill fill-a"></div>
+                </div>
+                <strong id="aCount">0</strong>
+              </div>
+
+              <div class="base-row">
+                <div class="base-info">
+                  <span class="base-letter base-t">T</span>
+                  <span>Thymine</span>
+                </div>
+                <div class="progress-track">
+                  <div id="tBar" class="progress-fill fill-t"></div>
+                </div>
+                <strong id="tCount">0</strong>
+              </div>
+
+              <div class="base-row">
+                <div class="base-info">
+                  <span class="base-letter base-g">G</span>
+                  <span>Guanine</span>
+                </div>
+                <div class="progress-track">
+                  <div id="gBar" class="progress-fill fill-g"></div>
+                </div>
+                <strong id="gCount">0</strong>
+              </div>
+
+              <div class="base-row">
+                <div class="base-info">
+                  <span class="base-letter base-c">C</span>
+                  <span>Cytosine</span>
+                </div>
+                <div class="progress-track">
+                  <div id="cBar" class="progress-fill fill-c"></div>
+                </div>
+                <strong id="cCount">0</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="secondary-grid">
+          <section class="panel sequence-output-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">SEQUENCE TRANSFORMATION</p>
+                <h2>Reverse complement</h2>
+              </div>
+            </div>
+
+            <p class="panel-description">
+              The reverse complement is the sequence read in reverse order with
+              each base replaced by its complementary base.
+            </p>
+
+            <div class="output-box">
+              <code id="reverseComplement">Your result will appear here.</code>
+              <button type="button" id="copyComplementButton" class="copy-button">
+                Copy
+              </button>
+            </div>
+            <p id="copyMessage" class="copy-message" aria-live="polite"></p>
+          </section>
+
+          <section class="panel motif-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">PATTERN SEARCH</p>
+                <h2>Find a motif</h2>
+              </div>
+            </div>
+
+            <label for="motifInput">Motif to search for</label>
+            <div class="motif-form">
+              <input
+                type="text"
+                id="motifInput"
+                placeholder="Example: ATG"
+                maxlength="30"
+                spellcheck="false"
+              >
+              <button type="button" id="motifButton" class="button button-primary">
+                Search
+              </button>
+            </div>
+
+            <div id="motifResult" class="motif-result">
+              Analyze a sequence and enter a motif to begin.
+            </div>
+          </section>
+        </div>
+
+        <section class="panel reading-frame-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">ADDITIONAL INSIGHT</p>
+              <h2>Open reading frame scan</h2>
+            </div>
+          </div>
+
+          <p class="panel-description">
+            This scan identifies the longest possible reading frame beginning
+            with ATG and ending at a stop codon.
+          </p>
+
+          <div id="orfResult" class="orf-result">
+            Analyze a sequence to scan for an open reading frame.
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>&copy; 2025 DNA Sequence Analyzer</p>
+      <p>Results are intended for educational use.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
