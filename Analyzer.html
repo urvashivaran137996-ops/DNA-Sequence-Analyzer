@@ -1,55 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>DNA Analyzer</title>
-    <link rel="stylesheet" href="style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+
 </head>
+
 <body>
 
-<header>
-    <h1>🧬 DNA Sequence Analyzer</h1>
-    <p>Analyze Your DNA Sequence</p>
-</header>
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
 
-<nav>
-    <a href="index.html">Home</a>
-    <a href="analyzer.html">Analyzer</a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
+    <div class="container">
+
+        <a class="navbar-brand fw-bold" href="index.html">
+            🧬 DNA Analyzer
+        </a>
+
+        <button class="navbar-toggler"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="analyzer.html">
+                        Analyzer
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="how-it-works.html">
+                        How It Works
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">About</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="contact.html">Contact</a>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
 </nav>
 
-<main>
-    <section class="analyzer">
-        <h2>DNA Analyzer</h2>
 
-        <p>Enter a DNA sequence using A, T, G and C.</p>
+<section class="analyzer-page">
 
-        <textarea
-            id="dnaInput"
-            placeholder="Example: ATGCGATTA">
-        </textarea>
+    <div class="container">
 
-        <div class="buttons">
-            <button onclick="analyzeDNA()">Analyze</button>
-            <button onclick="clearDNA()" class="clear">Clear</button>
-            <button onclick="copyResult()" class="copy">Copy Result</button>
+        <div class="section-title">
+
+            <span class="badge bg-primary">
+                DNA Analysis Tool
+            </span>
+
+            <h1>Sequence Analyzer</h1>
+
+            <p>
+                Enter a DNA sequence containing A, T, G and C.
+            </p>
+
         </div>
 
-        <div id="error"></div>
 
-        <div id="result" class="result">
-            <p>Enter a DNA sequence and click Analyze.</p>
+        <div class="row justify-content-center">
+
+            <div class="col-lg-10">
+
+                <div class="analyzer-box">
+
+                    <label class="form-label fw-bold">
+                        Enter DNA Sequence
+                    </label>
+
+                    <textarea
+                        id="dnaInput"
+                        class="form-control sequence-input"
+                        rows="8"
+                        placeholder="Example: ATGCGTACGATCGATCGTAGCTAGC">
+                    </textarea>
+
+
+                    <div class="mt-3">
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="analyzeSequence()">
+                            🔬 Analyze Sequence
+                        </button>
+
+                        <button
+                            class="btn btn-success"
+                            onclick="loadExample()">
+                            Load Example
+                        </button>
+
+                        <button
+                            class="btn btn-outline-danger"
+                            onclick="clearSequence()">
+                            Clear
+                        </button>
+
+                    </div>
+
+
+                    <div id="errorBox"
+                         class="alert alert-danger mt-3 d-none">
+                    </div>
+
+                </div>
+
+
+                <div id="results"
+                     class="mt-5 d-none">
+
+                    <h2 class="mb-4">
+                        Analysis Results
+                    </h2>
+
+
+                    <div class="row g-4">
+
+                        <div class="col-md-4">
+                            <div class="result-box">
+                                <div class="result-icon">📏</div>
+                                <h6>Sequence Length</h6>
+                                <h2 id="length">0</h2>
+                                <small>Base pairs</small>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <div class="result-box">
+                                <div class="result-icon">🧬</div>
+                                <h6>GC Content</h6>
+                                <h2 id="gc">0%</h2>
+                                <small>G + C</small>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <div class="result-box">
+                                <div class="result-icon">🔬</div>
+                                <h6>AT Content</h6>
+                                <h2 id="at">0%</h2>
+                                <small>A + T</small>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card mt-4 shadow-sm">
+
+                        <div class="card-body">
+
+                            <h4>Base Composition</h4>
+
+                            <div class="table-responsive">
+
+                                <table class="table table-bordered text-center mt-3">
+
+                                    <thead class="table-dark">
+
+                                        <tr>
+                                            <th>Base</th>
+                                            <th>Name</th>
+                                            <th>Count</th>
+                                            <th>Percentage</th>
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr>
+                                            <td>A</td>
+                                            <td>Adenine</td>
+                                            <td id="aCount">0</td>
+                                            <td id="aPercent">0%</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>T</td>
+                                            <td>Thymine</td>
+                                            <td id="tCount">0</td>
+                                            <td id="tPercent">0%</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>G</td>
+                                            <td>Guanine</td>
+                                            <td id="gCount">0</td>
+                                            <td id="gPercent">0%</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>C</td>
+                                            <td>Cytosine</td>
+                                            <td id="cCount">0</td>
+                                            <td id="cPercent">0%</td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card mt-4 shadow-sm">
+
+                        <div class="card-body">
+
+                            <h4>Sequence Transformation</h4>
+
+                            <hr>
+
+                            <label class="fw-bold">
+                                Original Sequence
+                            </label>
+
+                            <div id="original"
+                                 class="sequence-output">
+                            </div>
+
+
+                            <label class="fw-bold mt-4">
+                                Complement
+                            </label>
+
+                            <div id="complement"
+                                 class="sequence-output">
+                            </div>
+
+
+                            <label class="fw-bold mt-4">
+                                Reverse
+                            </label>
+
+                            <div id="reverse"
+                                 class="sequence-output">
+                            </div>
+
+
+                            <label class="fw-bold mt-4">
+                                Reverse Complement
+                            </label>
+
+                            <div id="reverseComplement"
+                                 class="sequence-output">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
-    </section>
-</main>
 
-<footer>
-    <p>© 2026 DNA Sequence Analyzer</p>
+    </div>
+
+</section>
+
+
+<footer class="footer">
+
+    <p class="mb-0">
+        © 2026 DNA Sequencing Analyzer
+    </p>
+
 </footer>
 
-<script src="script.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="js/analyzer.js"></script>
 
 </body>
 </html>
